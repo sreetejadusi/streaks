@@ -2,7 +2,7 @@
   <img src="assets/logo.png" width="150" alt="Streaks Logo">  
 </div>
 
-# Streaks **A beautiful, privacy-first, completely offline habit tracker built with Flutter.**
+# Streaks: **A beautiful, privacy-first, completely offline habit tracker built with Flutter.**
 
 ---
 
