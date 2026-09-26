@@ -1,4 +1,4 @@
-package sreeteja.dev.streaks
+package streaks.sreeteja.dev
 
 import io.flutter.embedding.android.FlutterActivity
 
