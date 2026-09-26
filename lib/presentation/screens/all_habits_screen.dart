@@ -87,22 +87,37 @@ class _AllHabitsScreenState extends State<AllHabitsScreen> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: _allHabits.isEmpty
-            ? const Center(
+        child: Column(
+          children: [
+            if (_allHabits.isNotEmpty)
+              const Padding(
+                padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                 child: Text(
-                  'No habits found',
+                  'Long press and drag to reorder',
                   style: TextStyle(
                     color: AppColors.textSecondary,
-                    fontSize: 16,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-              )
-            : ReorderableListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                itemCount: _allHabits.length,
-                onReorder: _onReorder,
-                proxyDecorator: (child, index, animation) => child,
-                itemBuilder: (context, index) {
+              ),
+            Expanded(
+              child: _allHabits.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'No habits found',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 16,
+                        ),
+                      ),
+                    )
+                  : ReorderableListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      itemCount: _allHabits.length,
+                      onReorder: _onReorder,
+                      proxyDecorator: (child, index, animation) => child,
+                      itemBuilder: (context, index) {
                   final habit = _allHabits[index];
                   
                   return GestureDetector(
@@ -195,6 +210,9 @@ class _AllHabitsScreenState extends State<AllHabitsScreen> {
                   );
                 },
               ),
+            ),
+          ],
+        ),
       ),
     );
   }

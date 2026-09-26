@@ -9,7 +9,7 @@ import 'presentation/screens/onboarding_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await Hive.initFlutter();
   Hive.registerAdapter(HabitModelAdapter());
   Hive.registerAdapter(ProfileModelAdapter());

@@ -71,9 +71,9 @@ class BackupService {
 
         if (data.containsKey('profile')) {
           final profilesList = data['profile'] as List;
-          for (var p in profilesList) {
-            final profile = ProfileModel.fromJson(p);
-            await profileBox.add(profile);
+          if (profilesList.isNotEmpty) {
+            final profile = ProfileModel.fromJson(profilesList.first);
+            await profileBox.put('user', profile);
           }
         }
 

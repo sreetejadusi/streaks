@@ -1,4 +1,8 @@
-# Privacy Policy for Streaks
+<div align="center">
+  <img src="assets/logo.png" width="120" alt="Streaks Logo">
+  
+  # Privacy Policy for Streaks
+</div>
 
 **Last Updated:** September 27, 2026
 
@@ -9,14 +13,14 @@ Welcome to **Streaks**, a habit-tracking application designed with your privacy 
 **Streaks is a completely offline, privacy-first application.** 
 
 - **No Cloud Syncing**: The App does not connect to the internet to store, sync, or transmit your personal data, habits, or profile information.
-- **Local Storage**: All data you create within the App (including your name, age, habits, streaks, and progress) is stored locally on your device using a secure local database. 
+- **Local Storage**: All data you create within the App (including your name, age, habits, streaks, and progress history) is stored locally on your device using a secure local database. 
 - **No Analytics or Tracking**: We do not use third-party analytics, crash reporting, or user tracking services that collect your data.
 
 ## 2. Permissions
 
 To function properly, the App may request the following device permissions:
 - **Notifications**: Used exclusively to deliver local, on-device reminders for your daily habits. 
-- **Storage/Files**: Used only when you explicitly choose to "Export" or "Import" your profile data to save a `.streaks` backup file on your device.
+- **Storage/Files**: Used only when you explicitly choose to "Export" or "Import" your profile data to save or load a `.streaks` backup file on your device.
 
 ## 3. Data Export and Ownership
 

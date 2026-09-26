@@ -26,7 +26,7 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
   String _startDateText = 'Start date';
   DateTime _selectedStartDate = DateTime.now();
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _emojiController = TextEditingController();
+  
 
   late final AddHabit addHabit;
 
@@ -46,13 +46,13 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
       _selectedStartDate = DateTime.fromMillisecondsSinceEpoch(widget.editingHabit!.startDate);
       _startDateText = DateFormat('MMM d, yyyy').format(_selectedStartDate);
     }
-    _emojiController.text = _selectedEmoji;
+    
   }
 
   @override
   void dispose() {
     _titleController.dispose();
-    _emojiController.dispose();
+    
     super.dispose();
   }
 
@@ -132,6 +132,69 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
     );
   }
 
+    void _showEmojiPicker() {
+    final List<String> popularEmojis = [
+      '🎯', '💧', '🧘', '🏃', '🚶', '📚', '💪', '🍎', 
+      '💤', '📝', '🎨', '🎸', '💻', '🧹', '🪴', '💰',
+      '💊', '🔥', '🧠', '🎧', '🏋️', '🍳', '💵', '🛁'
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Select an Icon',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textMain,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 16,
+                  alignment: WrapAlignment.center,
+                  children: popularEmojis.map((emoji) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedEmoji = emoji;
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: AppColors.background,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(emoji, style: const TextStyle(fontSize: 24)),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _showDatePicker() async {
     final date = await showDatePicker(
       context: context,
@@ -170,33 +233,32 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
                     children: [
                       _buildLabel('Name your habit'),
                       const SizedBox(height: 12),
-                      _buildTextField('e.g. Morning Meditations'),
-
-                      const SizedBox(height: 24),
-                      _buildLabel('Select Habit Icon'),
-                      const SizedBox(height: 12),
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: TextField(
-                          controller: _emojiController,
-                          onChanged: (val) {
-                            if (val.isNotEmpty) {
-                              _selectedEmoji = val;
-                            }
-                          },
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 30),
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: '🎯',
-                            contentPadding: EdgeInsets.symmetric(vertical: 10),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: _showEmojiPicker,
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: Colors.grey.shade200, width: 1.5),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  _selectedEmoji,
+                                  style: const TextStyle(fontSize: 30),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildTextField('e.g. Morning Meditations'),
+                          ),
+                        ],
                       ),
 
                       const SizedBox(height: 24),
@@ -215,6 +277,15 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
                       ),
                       const SizedBox(height: 24),
                       _buildLabel('Repeat days'),
+                      const SizedBox(height: 4),
+                      Text(
+                        _getRepeatSubtitle(),
+                        style: const TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       const SizedBox(height: 12),
                       _buildDaysRow(),
                       const SizedBox(height: 24),
@@ -387,6 +458,26 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
         ),
       ),
     );
+  }
+
+  String _getRepeatSubtitle() {
+    if (_selectedDays.isEmpty) return 'No days selected';
+    if (_selectedDays.length == 7) return 'Every Day';
+    
+    final weekdays = [0, 1, 2, 3, 4];
+    final weekends = [5, 6];
+    
+    bool hasAllWeekdays = weekdays.every((d) => _selectedDays.contains(d));
+    bool hasAllWeekends = weekends.every((d) => _selectedDays.contains(d));
+    bool hasNoWeekdays = weekdays.every((d) => !_selectedDays.contains(d));
+    bool hasNoWeekends = weekends.every((d) => !_selectedDays.contains(d));
+    
+    if (hasAllWeekdays && hasNoWeekends) return 'Every Day Except Weekends';
+    if (hasAllWeekends && hasNoWeekdays) return 'Weekends only';
+    
+    final dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final sortedDays = _selectedDays.toList()..sort();
+    return sortedDays.map((d) => dayNames[d]).join(', ');
   }
 
   Widget _buildDaysRow() {

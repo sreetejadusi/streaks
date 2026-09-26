@@ -22,6 +22,11 @@ class HabitRepositoryImpl implements HabitRepository {
       time: habit.time,
       isDone: habit.isDone,
       typeIndex: habit.typeIndex,
+      iconEmoji: habit.iconEmoji,
+      repeatDays: habit.repeatDays,
+      startDate: habit.startDate,
+      orderIndex: habit.orderIndex,
+      completedDates: habit.completedDates,
     );
     await localDataSource.cacheHabit(model);
   }
@@ -35,6 +40,11 @@ class HabitRepositoryImpl implements HabitRepository {
       time: habit.time,
       isDone: habit.isDone,
       typeIndex: habit.typeIndex,
+      iconEmoji: habit.iconEmoji,
+      repeatDays: habit.repeatDays,
+      startDate: habit.startDate,
+      orderIndex: habit.orderIndex,
+      completedDates: habit.completedDates,
     );
     await localDataSource.updateHabit(model);
   }

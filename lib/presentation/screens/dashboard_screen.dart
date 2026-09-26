@@ -291,6 +291,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           bool isSelected = date.day == _selectedDate.day && 
                             date.month == _selectedDate.month && 
                             date.year == _selectedDate.year;
+          bool isToday = date.day == now.day && 
+                         date.month == now.month && 
+                         date.year == now.year;
           
           return GestureDetector(
             onTap: () {
@@ -319,6 +322,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     decoration: BoxDecoration(
                       color: isSelected ? AppColors.textMain : Colors.white,
                       shape: BoxShape.circle,
+                      border: (!isSelected && isToday) ? Border.all(color: AppColors.buttonOrange, width: 2) : null,
                       boxShadow: isSelected
                           ? [BoxShadow(color: AppColors.textMain.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 4))]
                           : [],
@@ -327,9 +331,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: Text(
                         '${date.day}',
                         style: TextStyle(
-                          color: isSelected ? Colors.white : AppColors.textMain,
+                          color: isSelected ? Colors.white : (!isSelected && isToday ? AppColors.buttonOrange : AppColors.textMain),
                           fontSize: 15,
-                          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                          fontWeight: isSelected || isToday ? FontWeight.w700 : FontWeight.w600,
                         ),
                       ),
                     ),
@@ -357,7 +361,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Set the reminder',
+                  'Allow Notifications',
                   style: TextStyle(
                     color: AppColors.peachCardText,
                     fontSize: 18,
