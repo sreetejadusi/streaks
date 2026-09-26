@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/services/backup_service.dart';
 import '../../data/models/profile_model.dart';
@@ -125,6 +126,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   }
                 },
               ),
+              const SizedBox(height: 48),
+              Center(
+                child: GestureDetector(
+                  onTap: () async {
+                    final url = Uri.parse('https://github.com/sreetejadusi/streaks');
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                    }
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.code_rounded, size: 16, color: AppColors.textSecondary),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Open source on GitHub.',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
             ],
           ),
         ),

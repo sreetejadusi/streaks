@@ -1,6 +1,5 @@
 <div align="center">
   <img src="assets/logo.png" width="120" alt="Streaks Logo">
-  
 </div>
 
 # Privacy Policy for Streaks
