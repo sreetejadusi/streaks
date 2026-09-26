@@ -201,6 +201,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour >= 5 && hour < 12) {
+      return 'Morning';
+    } else if (hour >= 12 && hour < 17) {
+      return 'Afternoon';
+    } else {
+      return 'Evening';
+    }
+  }
+
   Widget _buildHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -211,7 +222,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Morning, $_userName',
+                '${_getGreeting()}, $_userName',
                 style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
