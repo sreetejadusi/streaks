@@ -1,0 +1,19 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Calendar Body -->
+  <rect x="20" y="30" width="60" height="50" rx="8" fill="#86A539"/>
+  <!-- Top bar -->
+  <rect x="20" y="30" width="60" height="15" rx="8" fill="#7C9A43"/>
+  <!-- Bindings -->
+  <rect x="30" y="20" width="6" height="16" rx="3" fill="#FFF"/>
+  <rect x="64" y="20" width="6" height="16" rx="3" fill="#FFF"/>
+  <!-- Grid -->
+  <rect x="28" y="55" width="10" height="10" rx="2" fill="#FFF"/>
+  <rect x="45" y="55" width="10" height="10" rx="2" fill="#FFF"/>
+  <rect x="62" y="55" width="10" height="10" rx="2" fill="#FFF"/>
+  <rect x="28" y="70" width="10" height="10" rx="2" fill="#FFF"/>
+  <rect x="45" y="70" width="10" height="10" rx="2" fill="#FFF"/>
+  <rect x="62" y="70" width="10" height="10" rx="2" fill="#FFF"/>
+  <!-- Decorative elements -->
+  <path d="M 15 40 Q 10 30 15 20" stroke="#F5761A" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M 85 20 Q 90 25 85 30" stroke="#E37EB3" stroke-width="3" stroke-linecap="round" fill="none"/>
+</svg>
