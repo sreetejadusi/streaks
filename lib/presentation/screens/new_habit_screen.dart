@@ -106,33 +106,135 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
   }
 
   void _showAmountPicker() {
+    final hController = TextEditingController();
+    final mController = TextEditingController();
+    
+    // Basic parse of current _selectedAmount if we want to prefill
+    // For simplicity, leave empty.
+
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
-        return SafeArea(
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            top: 24, left: 24, right: 24,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: ['5 min', '10 min', '15 min', '30 min', '1 hour'].map((amount) {
-              return ListTile(
-                title: Text(amount, style: const TextStyle(fontWeight: FontWeight.w600)),
-                onTap: () {
-                  setState(() {
-                    _selectedAmount = amount;
-                  });
-                  Navigator.pop(context);
-                },
-              );
-            }).toList(),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Set duration', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textMain)),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: hController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Hours (1-12)',
+                        labelStyle: const TextStyle(color: AppColors.textSecondary),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(color: AppColors.buttonOrange, width: 2),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: TextField(
+                      controller: mController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Minutes (1-60)',
+                        labelStyle: const TextStyle(color: AppColors.textSecondary),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(color: AppColors.buttonOrange, width: 2),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.buttonOrange,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  ),
+                  onPressed: () {
+                    int finalH = int.tryParse(hController.text) ?? 0;
+                    int finalM = int.tryParse(mController.text) ?? 0;
+                    
+                    if (finalH > 12) finalH = 12;
+                    if (finalM > 60) finalM = 60;
+                    
+                    String res = '';
+                    if (finalH > 0) res += '${finalH} hr ';
+                    if (finalM > 0) res += '${finalM} min';
+                    if (res.isEmpty) res = '15 min';
+                    
+                    setState(() {
+                      _selectedAmount = res.trim();
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Save', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
           ),
         );
       },
     );
   }
 
-    void _showEmojiPicker() {
+    void _deleteHabit() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Delete Habit', style: TextStyle(fontWeight: FontWeight.w700)),
+        content: const Text('Are you sure you want to delete this habit? All completion history will be lost.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            onPressed: () async {
+              final box = Hive.box<HabitModel>('habits');
+              await box.delete(widget.editingHabit!.id);
+              if (mounted) {
+                Navigator.pop(context); // pop dialog
+                Navigator.pop(context); // pop screen
+              }
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEmojiPicker() {
     final List<String> popularEmojis = [
       '🎯', '💧', '🧘', '🏃', '🚶', '📚', '💪', '🍎', 
       '💤', '📝', '🎨', '🎸', '💻', '🧹', '🪴', '💰',
@@ -354,18 +456,36 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
             color: AppColors.textMain,
           ),
         ),
-        GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.grey.shade200, width: 1.5),
+        Row(
+          children: [
+            if (widget.editingHabit != null)
+              GestureDetector(
+                onTap: _deleteHabit,
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  margin: const EdgeInsets.only(right: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.delete_outline_rounded, color: Colors.red),
+                ),
+              ),
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey.shade200, width: 1.5),
+                ),
+                child: const Icon(Icons.close_rounded, color: AppColors.textMain),
+              ),
             ),
-            child: const Icon(Icons.close_rounded, color: AppColors.textMain),
-          ),
+          ],
         ),
       ],
     );
